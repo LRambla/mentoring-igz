@@ -1,0 +1,4 @@
+/*
+  Aquí se definen
+    - Outputs
+*/
