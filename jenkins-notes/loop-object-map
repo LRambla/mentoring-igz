@@ -1,0 +1,33 @@
+
+TENANTS = [
+  "A": [
+    "NAME":             "tenant_A",
+    "REGION":           "US",
+    "CREDS":            "<A_creds>",
+  ],
+  "B": [
+    "NAME":             "tenant_B",
+    "REGION":           "EUROPE",
+    "CREDS":            "<B_creds>",
+  ],
+(...)
+]
+
+pipeline { 
+    stage('Get custom parsers list from TENANTS') {
+      steps {
+        script {
+          TENANTS.each() { t ->
+              def TENANT_NAME        = """${TENANTS["${t.key}"]["NAME"]}"""
+              def TENANT_REGION      = """${TENANTS["${t.key}"]["REGION"]}"""
+              def TENANT_CREDS       = """${TENANTS["${t.key}"]["CREDS"]}"""
+            
+            withCredentials([file(credentialsId: "${TENANT_CREDS}", variable: 'CREDS'),
+                          sshUserPrivateKey(credentialsId: '<CREDS_ID>', keyFileVariable: 'ID_RSA')]) {
+              //do whatever
+            } 
+          } 
+        }
+      } //steps closing
+    } //stage closing
+} //pipeline closing

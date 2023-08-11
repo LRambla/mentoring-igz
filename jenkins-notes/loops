@@ -1,0 +1,32 @@
+# Option A. If they use @NonCPS structure
+
+pipeline{
+  stage {
+    step {...}
+    step {
+      iterate_in_file_lines(file)
+    }
+  }
+}
+
+@NonCPS //This has to be NonCPS because we're using '.each' or pipeline will break
+def iterate_in_file_lines (file) { 
+  file.each { line ->
+    echo $line
+  }
+}
+
+# Option B. Without @NonCPS (declarative way)
+pipeline{
+  stage {
+    step {...}
+    step {
+      script {
+        def file = readFile <file_location>
+        file.eachLine { line ->
+          echo $line
+        }
+      }
+    }
+  }
+}
